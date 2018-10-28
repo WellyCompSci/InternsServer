@@ -1,0 +1,39 @@
+var createError = require('http-errors');
+var express = require('express');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var logger = require('morgan');
+var mongoose = require('mongoose');
+var cors = require('cors');
+
+const { MONGODB_HOST, PORT, HOST, ROUTE } = require('./config');
+
+mongoose.connect(MONGODB_HOST, { useNewUrlParser: true });
+
+mongoose.connection.on('error', console.error.bind(console, 'connection error: '));
+mongoose.connection.once('open', () => {
+    console.log('DB Connected');
+
+    var app = express();
+
+    app.use(logger('dev'));
+    app.use(bodyParser.urlencoded({
+        extended: false
+    }));
+    app.use(cors());
+    app.use(bodyParser.json());
+    app.use(cookieParser());
+    app.set('trust proxy', true);
+    app.set('trust proxy', 'loopback');
+
+
+    var router = require("./routes");
+    app.use(ROUTE, router);
+
+
+    // catch 404 errors
+    app.use((req, res, next) => {
+        next(createError(404, `${req.originalUrl} - 404 not found on ${req.protocol}//${req.get('Host')}`));
+    });
+    app.listen(PORT, HOST);
+});
