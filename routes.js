@@ -10,7 +10,7 @@ router.get("/", (req, res) => {
 
 router.get("/:courseID", (req, res) => {
     Course.findById(req.params.courseID, (err, course) => {
-        course.videos = course.videos.sort((a, b) => b.order > a.order);
+        course.videos = course.videos.sort((a, b) => b.order < a.order);
         res.status(err ? 500 : 200).json(err ? err : course);
     });
 });
