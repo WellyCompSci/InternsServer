@@ -34,7 +34,7 @@ router.post("/:courseID", (req, res) => {
 });
 
 router.post("/:courseID/", (req, res) => {
-    Course.findByIdAndUpdate(req.params.courseID, {$push: {courses: req.body}}, (err, doc) => {
+    Course.findByIdAndUpdate(req.params.courseID, {$push: {videos: req.body}}, (err, doc) => {
         res.status(err ? 500 : 200).json(err ? err : doc);
     });
 });
