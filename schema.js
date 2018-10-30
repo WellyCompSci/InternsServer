@@ -3,15 +3,13 @@ var mongoose = require('mongoose');
 var videoSchema =  mongoose.Schema({
    title: String,
     description: String,
-    youtubeID: String,
-    order: Number
+    youtubeID: String
 });
 
 var courseSchema = mongoose.Schema({
    title: String,
     description: String,
-    videos: [videoSchema],
-    order: Number
+    videos: [videoSchema]
 });
 
 var Course = mongoose.model("Course", courseSchema);

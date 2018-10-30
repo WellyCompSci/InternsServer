@@ -3,14 +3,13 @@ var { Course } = require('./schema');
 var router = express.Router();
 
 router.get("/", (req, res) => {
-   Course.find({}, null, {sort: 'order'}, (err, courses) => {
+   Course.find({}, null, (err, courses) => {
       res.status(err ? 500 : 200).json(err ? err : courses);
    });
 });
 
 router.get("/:courseID", (req, res) => {
     Course.findById(req.params.courseID, (err, course) => {
-        course.videos = course.videos.sort((a, b) => b.order > a.order);
         res.status(err ? 500 : 200).json(err ? err : course);
     });
 });
