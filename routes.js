@@ -1,4 +1,5 @@
 var express = require("express");
+var slug = require('limax');
 var { Course } = require('./schema');
 var router = express.Router();
 
@@ -7,39 +8,26 @@ router.get("/", (req, res) => {
       res.status(err ? 500 : 200).json(err ? err : courses);
    });
 });
-
-router.get("/:courseID", (req, res) => {
-    Course.findById(req.params.courseID, (err, course) => {
-        res.status(err ? 500 : 200).json(err ? err : course);
-    });
-});
-
-router.get("/:courseID/:videoID", (req, res) => {
-    Course.findOne({_id: req.params.courseID, 'videos._id': req.params.videoID}, (err, video) => {
-        res.status(err ? 500 : 200).json(err ? err : video);
-    });
-});
-
-router.post("/", (req, res) => {
-   Course.create(req.body, (err, doc) => {
+router.post("/", (req, res) => { 
+   Course.create({...req.body, slug: slug(req.body.title)}, (err, doc) => {
        res.status(err ? 500 : 200).json(err ? err : doc);
    });
 });
 
 router.post("/:courseID", (req, res) => {
-    Course.findByIdAndUpdate(req.params.courseID, {$set: req.body}, (err, doc) => {
+    Course.findByIdAndUpdate(req.params.courseID, {$set: {...req.body, slug: slug(req.body.title)}}, (err, doc) => {
         res.status(err ? 500 : 200).json(err ? err : doc);
     });
 });
 
 router.post("/:courseID/new-video", (req, res) => {
-    Course.findByIdAndUpdate(req.params.courseID, {$push: {videos: req.body}}, (err, doc) => {
+    Course.findByIdAndUpdate(req.params.courseID, {$push: {videos: {...req.body, slug: slug(req.body.title)}}}, (err, doc) => {
         res.status(err ? 500 : 200).json(err ? err : doc);
     });
 });
 
 router.post("/:courseID/:videoID", (req, res) => {
-    Course.findOneAndUpdate({_id: req.params.courseID, 'videos._id': req.params.videoID}, {'videos.$': {$set: req.body}}, (err, doc) => {
+    Course.findOneAndUpdate({_id: req.params.courseID, 'videos._id': req.params.videoID}, {'videos.$': {$set: {...req.body, slug: slug(req.body.title)}}}, (err, doc) => {
         res.status(err ? 500 : 200).json(err ? err : doc);
     });
 });

@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose');
 var cors = require('cors');
+var helmet = require('helmet');
 
 const { MONGODB_HOST, PORT, HOST, ROUTE } = require('./config');
 
@@ -17,6 +18,7 @@ mongoose.connection.once('open', () => {
     var app = express();
 
     app.use(logger('dev'));
+    app.use(helmet());
     app.use(bodyParser.urlencoded({
         extended: false
     }));
@@ -35,5 +37,9 @@ mongoose.connection.once('open', () => {
     app.use((req, res, next) => {
         next(createError(404, `${req.originalUrl} - 404 not found on ${req.protocol}//${req.get('Host')}`));
     });
+    app.use((err, req, res, next) => {
+        console.error(err.stack)
+        res.status(500).send('Something broke!');
+    })
     app.listen(PORT, HOST);
 });
