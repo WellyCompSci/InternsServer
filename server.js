@@ -18,11 +18,11 @@ mongoose.connection.once('open', () => {
     var app = express();
 
     app.use(logger('dev'));
+    app.use(cors());
     app.use(helmet());
     app.use(bodyParser.urlencoded({
         extended: false
     }));
-    app.use(cors());
     app.use(bodyParser.json());
     app.use(cookieParser());
     app.set('trust proxy', true);
