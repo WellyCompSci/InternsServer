@@ -14,7 +14,8 @@ var courseSchema = mongoose.Schema({
     icon: String,
     level: String,
     slug: String,
-    youtubeID: String
+    youtubeID: String,
+    position: Number
 });
 
 var Course = mongoose.model("Course", courseSchema);
