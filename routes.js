@@ -4,7 +4,7 @@ var { Course } = require('./schema');
 var router = express.Router();
 
 router.get("/", (req, res) => {
-   Course.find({}, null, (err, courses) => {
+   Course.find({}).sort({position: 1}).exec(err, courses) => {
       res.status(err ? 500 : 200).json(err ? err : courses);
    });
 });
