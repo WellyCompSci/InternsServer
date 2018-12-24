@@ -15,7 +15,7 @@ router.post("/", (req, res) => {
 });
 
 router.post("/:courseID", (req, res) => {
-    Course.findByIdAndUpdate(req.params.courseID, {$set: {...req.body, slug: slug(req.body.title)}}, (err, doc) => {
+    Course.findByIdAndUpdate(req.params.courseID, {$set: req.body.title ? {...req.body, slug: slug(req.body.title)} : {...req.body}}, (err, doc) => {
         res.status(err ? 500 : 200).json(err ? err : doc);
     });
 });
