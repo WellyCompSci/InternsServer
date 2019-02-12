@@ -6,8 +6,8 @@ var logger = require('morgan');
 var mongoose = require('mongoose');
 var cors = require('cors');
 var helmet = require('helmet');
-
 const Sentry = require('@sentry/node');
+
 Sentry.init({ dsn: 'https://38667df1808c42d480f308d7285e1483@sentry.io/1392749' });
 
 const { MONGODB_HOST, PORT, HOST, ROUTE } = require('./config');
@@ -19,6 +19,8 @@ mongoose.connection.once('open', () => {
     console.log('DB Connected');
 
     var app = express();
+
+    app.use(Sentry.Handlers.requestHandler());
 
     app.use(logger('dev'));
     app.use(cors());
@@ -40,6 +42,8 @@ mongoose.connection.once('open', () => {
         res.status(200).send('Internship Server - WellyCompSci');
     });
     
+    app.use(Sentry.Handlers.errorHandler());
+
     // catch 404 errors
     app.use((req, res, next) => {
         next(createError(404, `${req.originalUrl} - 404 not found on ${req.protocol}//${req.get('Host')}`));
@@ -47,6 +51,7 @@ mongoose.connection.once('open', () => {
     app.use((err, req, res, next) => {
         console.error(err.stack)
         res.status(500).send('Something broke!');
+        res.end(res.sentry + '\n');
     })
     app.listen(PORT, HOST);
 });
