@@ -34,7 +34,7 @@ mongoose.connection.once('open', () => {
 
 
     app.get('/', (req, res) => {
-        res.status(200).send('myWelly Server - WellyCompSci');
+        res.status(200).send('Internship Server - WellyCompSci');
     });
     
     // catch 404 errors
