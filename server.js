@@ -33,6 +33,10 @@ mongoose.connection.once('open', () => {
     app.use(ROUTE, router);
 
 
+    app.get('/', (req, res) => {
+        res.status(200).send('myWelly Server - WellyCompSci');
+    });
+    
     // catch 404 errors
     app.use((req, res, next) => {
         next(createError(404, `${req.originalUrl} - 404 not found on ${req.protocol}//${req.get('Host')}`));
